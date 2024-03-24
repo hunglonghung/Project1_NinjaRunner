@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Callbacks;
 using UnityEngine;
 
 public class PatrolState : IState
@@ -22,8 +23,9 @@ public class PatrolState : IState
             {
                 enemy.changeState(new attackState());
             }
-            else
+            else 
             {
+                Debug.Log("Lost Target!");
                 enemy.Moving();
             }
         }
@@ -41,6 +43,6 @@ public class PatrolState : IState
 
     public void OnExit(Enemy enemy)
     {
-        Debug.Log("Patrol Ended");
+        Debug.Log("Patrol Exit");
     }
 }

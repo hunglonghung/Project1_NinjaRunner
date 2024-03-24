@@ -27,6 +27,7 @@ public class PlayerInfo : MonoBehaviour
     }
     public void OnHit(float damage)
     {
+        Debug.Log(hp);
         if (hp >= damage)
         {
             hp -= damage;
@@ -40,7 +41,8 @@ public class PlayerInfo : MonoBehaviour
     }
     public virtual void OnDeath()
     {
-        
+        changeAnim("Dead");
+        Invoke(nameof(OnDespawn),2f);
     }
     
 }

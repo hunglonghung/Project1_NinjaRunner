@@ -13,6 +13,9 @@ public class Player : PlayerInfo
     [SerializeField] float multiplier = 1.1f;
     [SerializeField] float speed = 1.0f;
     [SerializeField] private float jumpForce = 350;
+    [SerializeField] Kunai kunaiPrefab;
+    [SerializeField] Transform throwPoint;
+    [SerializeField] GameObject attackArea;
     string currentAnimName;
     private bool isGrounded = false ;
     private bool isJumping = false;
@@ -121,12 +124,14 @@ public class Player : PlayerInfo
         changeAnim("Attack");
         isAttack = true;
         Invoke("ResetAttack",0.5f);
+        attackArea.SetActive(true);
     }
     void Throw()
     {
         changeAnim("Throw");
         isAttack = true;
         Invoke("ResetAttack",0.5f);
+        Instantiate(kunaiPrefab,throwPoint.position,throwPoint.rotation);
     }
     void ResetAttack()
     {
@@ -172,10 +177,18 @@ public class Player : PlayerInfo
     public override void OnDespawn()
     {
         base.OnDespawn();
+        OnInit();
     }
     public override void OnDeath()
     {
         base.OnDeath();
     }
-    
+    private void ActiveAttack()
+    {
+        attackArea.SetActive(true);
+    }
+    private void DeActiveAttack()
+    {
+        attackArea.SetActive(false);
+    }
 }

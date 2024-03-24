@@ -13,7 +13,6 @@ private void OnTriggerEnter2D(Collider2D collision)
     // Kiểm tra tag của đối tượng va chạm
     if(collision.tag == "Player")
     {
-        Debug.Log("Player detected");
         // Gọi phương thức SetTarget với tham chiếu đến PlayerInfo
         enemy.SetTarget(collision.GetComponent<PlayerInfo>());
     }

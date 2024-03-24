@@ -7,6 +7,7 @@ public class Enemy : PlayerInfo
     [SerializeField] private float attackRange;
     [SerializeField] private float moveSpeed;
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] GameObject attackArea;
     private IState currentState;
     private PlayerInfo target;
     public PlayerInfo Target => target;
@@ -21,9 +22,13 @@ public class Enemy : PlayerInfo
     internal void SetTarget(PlayerInfo player)
     {
         this.target = player;
+        Debug.Log(target);
         if(targetInRange())
         {
+            Debug.Log("Attack Player!");
             changeState(new attackState());
+            
+            return;
         }
         else{
             if(target != null)
@@ -48,9 +53,10 @@ public class Enemy : PlayerInfo
     }
     public override void OnInit()
     {
-        Debug.Log("OnInit");
+
         base.OnInit();
         changeState(new IdleState());
+        DeActiveAttack();
     }
     public override void OnDespawn()
     {
@@ -58,6 +64,7 @@ public class Enemy : PlayerInfo
     }
     public override void OnDeath()
     {
+        changeState(null);
         base.OnDeath();
     }
     public void changeState(IState newState)
@@ -87,9 +94,12 @@ public class Enemy : PlayerInfo
     public void Attack()
     {
         changeAnim("Attack");
+        ActiveAttack();
+        Invoke(nameof(DeActiveAttack),0.5f);
     }
     public bool targetInRange()
     {
+        if(target == null) return false;    
         if (target != null && Vector2.Distance(target.transform.position, transform.position) < attackRange) return true;
         return Vector2.Distance(target.transform.position, transform.position) <= attackRange;
     }
@@ -97,7 +107,7 @@ public class Enemy : PlayerInfo
     {
         if(other.tag == "EnemyWall")
         {
-            Debug.Log("collided!");
+
             changeDirection(!isRight);
         }
     }
@@ -105,6 +115,14 @@ public class Enemy : PlayerInfo
     {
         this.isRight = isRight;
         transform.rotation = isRight ? Quaternion. Euler(Vector3.zero) : Quaternion. Euler(Vector3.up * 180);
+    }
+    private void ActiveAttack()
+    {
+        attackArea.SetActive(true);
+    }
+    private void DeActiveAttack()
+    {
+        attackArea.SetActive(false);
     }
 }
 

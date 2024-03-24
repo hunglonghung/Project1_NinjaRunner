@@ -20,7 +20,6 @@ public class attackState : IState
 
     public void OnExecute(Enemy enemy)
     {
-        Debug.Log("changePatrol!");
         timer += Time.deltaTime;
         if(timer >= 1.5f)
         {
@@ -31,6 +30,6 @@ public class attackState : IState
 
     public void OnExit(Enemy enemy)
     {
-        Debug.Log("Attacking!");
+        Debug.Log("Attack Exit");
     }
 }

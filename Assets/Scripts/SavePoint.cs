@@ -9,7 +9,6 @@ public class SavePoint : MonoBehaviour
     {
         if(other.tag == "Player")
         {   
-            Debug.Log("Saved");
             other.GetComponent<Player>().SavePoint();
 
         }
