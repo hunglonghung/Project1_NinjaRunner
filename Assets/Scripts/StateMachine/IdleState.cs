@@ -11,7 +11,6 @@ public class IdleState : IState
         enemy.StopMoving();
         timer = 0;
         randomTime = Random.Range(2f,4f);
-        Debug.Log("");
     }
 
     public void OnExecute(Enemy enemy)
@@ -28,7 +27,7 @@ public class IdleState : IState
 
     public void OnExit(Enemy enemy)
     {
-        Debug.Log("");
+        Debug.Log("Idle exit");
     }
 
     // Start is called before the first frame update

@@ -20,6 +20,7 @@ public class attackState : IState
 
     public void OnExecute(Enemy enemy)
     {
+
         timer += Time.deltaTime;
         if(timer >= 1.5f)
         {

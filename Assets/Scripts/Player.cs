@@ -28,7 +28,7 @@ public class Player : PlayerInfo
     // Start is called before the first frame update
     void Start()
     {
-        SavePoint();
+        
         OnInit();
     }
 
@@ -125,6 +125,7 @@ public class Player : PlayerInfo
         isAttack = true;
         Invoke("ResetAttack",0.5f);
         attackArea.SetActive(true);
+        ActiveAttack();
     }
     void Throw()
     {
@@ -169,10 +170,13 @@ public class Player : PlayerInfo
     }
     public override void OnInit()
     {
+        
         isDead = false;
         isAttack = false;
         transform.position = savePoint;
         changeAnim("Idle");
+        DeActiveAttack();
+        SavePoint();
     }
     public override void OnDespawn()
     {
