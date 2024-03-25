@@ -7,6 +7,7 @@ public class PatrolState : IState
 {
     float randomTime;
     float timer;
+
     public void OnEnter(Enemy enemy)
     {
         timer = 0;
@@ -28,17 +29,18 @@ public class PatrolState : IState
                 Debug.Log("Lost Target!");
                 enemy.Moving();
             }
+            if(timer < randomTime)
+            {
+                enemy.Moving();
+            }
+            else
+            {
+                enemy.changeState(new IdleState());
+            }
         }
 
         
-        if(timer < randomTime)
-        {
-            enemy.Moving();
-        }
-        else
-        {
-            enemy.changeState(new IdleState());
-        }
+        
     }
 
     public void OnExit(Enemy enemy)

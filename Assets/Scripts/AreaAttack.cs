@@ -8,7 +8,10 @@ public class AreaAttack : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Player" || collision.tag == "Enemy")
-        collision.GetComponent<PlayerInfo>().OnHit(30f);
+        {
+            collision.GetComponent<PlayerInfo>().OnHit(30f);
+        }
+        
     }
 
 }

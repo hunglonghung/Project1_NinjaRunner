@@ -126,13 +126,16 @@ public class Player : PlayerInfo
         Invoke("ResetAttack",0.5f);
         attackArea.SetActive(true);
         ActiveAttack();
+        Invoke(nameof(DeActiveAttack),0.5f);
     }
     void Throw()
     {
         changeAnim("Throw");
         isAttack = true;
-        Invoke("ResetAttack",0.5f);
+        
         Instantiate(kunaiPrefab,throwPoint.position,throwPoint.rotation);
+        Debug.Log(Instantiate(kunaiPrefab,throwPoint.position,throwPoint.rotation));
+        Invoke("ResetAttack",0.5f);
     }
     void ResetAttack()
     {
@@ -170,13 +173,15 @@ public class Player : PlayerInfo
     }
     public override void OnInit()
     {
-        
+        base.OnInit(); // Gọi OnInit từ PlayerInfo để reset hp
         isDead = false;
+        isDead2 = false;
         isAttack = false;
         transform.position = savePoint;
         changeAnim("Idle");
-        DeActiveAttack();
         SavePoint();
+        DeActiveAttack();
+        
     }
     public override void OnDespawn()
     {

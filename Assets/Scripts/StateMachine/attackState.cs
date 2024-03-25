@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class attackState : IState
 {
@@ -15,16 +16,18 @@ public class attackState : IState
             enemy.Attack(); 
             
         }
+        else
+        {
+            enemy.changeState(new PatrolState());
+        }
         timer = 0;
     }
 
     public void OnExecute(Enemy enemy)
     {
-
         timer += Time.deltaTime;
         if(timer >= 1.5f)
         {
-            
             enemy.changeState(new PatrolState());
         }
     }
@@ -33,4 +36,5 @@ public class attackState : IState
     {
         Debug.Log("Attack Exit");
     }
+
 }

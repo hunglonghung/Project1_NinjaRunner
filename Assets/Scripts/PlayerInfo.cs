@@ -6,8 +6,8 @@ public class PlayerInfo : MonoBehaviour
 {
     [SerializeField] Animator anim2;
     string currentAnimName2;
-    private float hp;
-    public bool isDead2 => hp <= 0;
+    [SerializeField] public float hp = 100f;
+    [SerializeField] public bool isDead2 = false;
     public void changeAnim(string animName)
     {
         if(currentAnimName2 != animName)
@@ -23,20 +23,19 @@ public class PlayerInfo : MonoBehaviour
     }
     public virtual void OnDespawn()
     {
-        
+        OnInit();
     }
     public void OnHit(float damage)
     {
-        Debug.Log(hp);
-        if (hp >= damage)
-        {
+        Debug.Log("Hit");
             hp -= damage;
+            if(hp <= 0) isDead2= true;
             if (isDead2)
             {
                 OnDeath();
             }
             
-        }
+        
             
     }
     public virtual void OnDeath()

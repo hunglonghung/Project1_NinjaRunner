@@ -8,6 +8,7 @@ public class Enemy : PlayerInfo
     [SerializeField] private float moveSpeed;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] GameObject attackArea;
+    [SerializeField] public bool isAttacking;
     private IState currentState;
     private PlayerInfo target;
     public PlayerInfo Target => target;
@@ -84,7 +85,12 @@ public class Enemy : PlayerInfo
     public void Moving()
     {
         changeAnim("Run");
-        rb.velocity = transform.right * moveSpeed; 
+        if(isAttacking == false)
+        {
+            rb.velocity = transform.right * moveSpeed; 
+        }
+        else rb.velocity = Vector2.zero;
+        
     }
     public void StopMoving()
     {
@@ -93,9 +99,17 @@ public class Enemy : PlayerInfo
     }
     public void Attack()
     {
+        isAttacking = true;
         changeAnim("Attack");
         ActiveAttack();
         Invoke(nameof(DeActiveAttack),0.5f);
+        Invoke(nameof(changeAttackState),1.5f);
+        
+    }
+    public void changeAttackState()
+    {
+        isAttacking = false;
+        
     }
     public bool targetInRange()
     {
@@ -124,5 +138,6 @@ public class Enemy : PlayerInfo
     {
         attackArea.SetActive(false);
     }
+
 }
 
