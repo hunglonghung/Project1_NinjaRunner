@@ -9,14 +9,12 @@ public class Player : PlayerInfo
 {
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] Animator anim;
     [SerializeField] float multiplier = 1.1f;
     [SerializeField] float speed = 1.0f;
     [SerializeField] private float jumpForce = 350;
     [SerializeField] Kunai kunaiPrefab;
     [SerializeField] Transform throwPoint;
     [SerializeField] GameObject attackArea;
-    string currentAnimName;
     private bool isGrounded = false ;
     private bool isJumping = false;
     private bool isAttack = false;
@@ -35,7 +33,7 @@ public class Player : PlayerInfo
     // Update is called once per frame
     void FixedUpdate() 
     {
-        if(isDead)
+        if(isDead || isDead2)
         {
             return;
         }
@@ -51,7 +49,7 @@ public class Player : PlayerInfo
         if(isGrounded)
         {
             Debug.Log(isDead);
-            if(isDead)
+            if(isDead || isDead2)
             {
                 return;
             }
@@ -104,7 +102,7 @@ public class Player : PlayerInfo
             
         }
         //idle
-        else if(isGrounded)
+        else if(isGrounded && !isDead2)
         {
             changeAnim("Idle");
             rb.velocity = Vector2.zero;
@@ -175,7 +173,6 @@ public class Player : PlayerInfo
     {
         base.OnInit(); // Gọi OnInit từ PlayerInfo để reset hp
         isDead = false;
-        isDead2 = false;
         isAttack = false;
         transform.position = savePoint;
         changeAnim("Idle");

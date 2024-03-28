@@ -1,46 +1,56 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Callbacks;
 using UnityEngine;
 
 public class PlayerInfo : MonoBehaviour
 {
-    [SerializeField] Animator anim2;
-    string currentAnimName2;
+    [SerializeField] public Animator anim;
+    [SerializeField] protected HealthBar healthBar;
+    public string currentAnimName;
     [SerializeField] public float hp = 100f;
-    [SerializeField] public bool isDead2 = false;
-    public void changeAnim(string animName)
+    [SerializeField] public bool isDead2 => hp <= 0;
+    public void Start()
     {
-        if(currentAnimName2 != animName)
+        OnInit();
+    }
+    protected void changeAnim(string animName)
+    {
+        if(currentAnimName != animName)
         {
-            anim2.ResetTrigger(animName);
-            currentAnimName2 = animName;
-            anim2.SetTrigger(currentAnimName2);
+            anim.ResetTrigger(animName);
+            currentAnimName = animName;
+            anim.SetTrigger(currentAnimName);
         }
     }
     public virtual void OnInit()
     {
         hp = 100;
+        healthBar.OnInit(100,transform);
     }
     public virtual void OnDespawn()
     {
-        OnInit();
+
     }
     public void OnHit(float damage)
     {
-        Debug.Log("Hit");
+        if(hp >= damage)
+        {
             hp -= damage;
-            if(hp <= 0) isDead2= true;
-            if (isDead2)
+            if(hp <= damage)
             {
+                hp = 0;
+                
                 OnDeath();
             }
-            
-        
-            
+            healthBar.setNewHp(hp);
+        }
     }
     public virtual void OnDeath()
     {
         changeAnim("Dead");
+        Debug.Log("Dead!!!!");
         Invoke(nameof(OnDespawn),2f);
     }
     

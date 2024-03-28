@@ -9,6 +9,7 @@ public class AreaAttack : MonoBehaviour
     {
         if (collision.tag == "Player" || collision.tag == "Enemy")
         {
+            Debug.Log("-30");
             collision.GetComponent<PlayerInfo>().OnHit(30f);
         }
         

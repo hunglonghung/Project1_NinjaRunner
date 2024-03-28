@@ -45,16 +45,15 @@ public class Enemy : PlayerInfo
 
     // Update is called once per frame
     private void Update()
-    {
-        Debug.Log(currentState);
-        if (currentState != null)
-        {
-            currentState.OnExecute(this);
-        }
-    }
+{
+    if (isDead2 || currentState == null) return;
+    
+    Debug.Log(currentState);
+    currentState.OnExecute(this);
+}
+
     public override void OnInit()
     {
-
         base.OnInit();
         changeState(new IdleState());
         DeActiveAttack();
@@ -62,54 +61,42 @@ public class Enemy : PlayerInfo
     public override void OnDespawn()
     {
         base.OnDespawn();
+        Destroy(healthBar.gameObject);
+        Destroy(gameObject);
     }
     public override void OnDeath()
     {
         changeState(null);
+        rb.velocity = Vector2.zero;
         base.OnDeath();
     }
-    public void changeState(IState newState)
-    {
-        if(currentState != null)
+    public void changeState(IState Newstate)
         {
+            if(currentState != null) {
             currentState.OnExit(this);
+            }
+            currentState = Newstate;
+            if(Newstate != null)
+            {
+                currentState.OnEnter(this);
+            }
         }
-        currentState = newState;
-        if(currentState != null)
-        {
-            currentState.OnEnter(this);
-        }
-
-    }
     
     public void Moving()
     {
         changeAnim("Run");
-        if(isAttacking == false)
-        {
-            rb.velocity = transform.right * moveSpeed; 
-        }
-        else rb.velocity = Vector2.zero;
-        
+        rb.velocity = transform.right * moveSpeed;
     }
     public void StopMoving()
     {
-        rb.velocity = Vector2.zero;
         changeAnim("Idle");
+        rb.velocity = Vector2.zero;
     }
     public void Attack()
     {
-        isAttacking = true;
-        changeAnim("Attack");
         ActiveAttack();
-        Invoke(nameof(DeActiveAttack),0.5f);
-        Invoke(nameof(changeAttackState),1.5f);
-        
-    }
-    public void changeAttackState()
-    {
-        isAttacking = false;
-        
+        changeAnim("Attack");
+        Invoke(nameof(DeActiveAttack), .5f);
     }
     public bool targetInRange()
     {
@@ -138,6 +125,7 @@ public class Enemy : PlayerInfo
     {
         attackArea.SetActive(false);
     }
+
 
 }
 

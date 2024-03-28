@@ -1,35 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Callbacks;
 using UnityEngine;
 
 public class PatrolState : IState
 {
-    float randomTime;
-    float timer;
-
+    float timer, randomtime;
     public void OnEnter(Enemy enemy)
     {
         timer = 0;
-        randomTime = Random.Range(3f,6f);
+        randomtime = Random.Range(3f, 6f);
     }
 
     public void OnExecute(Enemy enemy)
     {
         timer += Time.deltaTime;
         if(enemy.Target != null)
-        {
+        {//changes the enemy's direction to the player's direction
             enemy.changeDirection(enemy.Target.transform.position.x > enemy.transform.position.x);
-            if(enemy.targetInRange())
+            if (enemy.targetInRange())//When the target is within range, attack and Stop moving
             {
                 enemy.changeState(new attackState());
+
             }
-            else 
+            else
             {
-                Debug.Log("Lost Target!");
                 enemy.Moving();
             }
-            if(timer < randomTime)
+            
+        }
+        else
+        {
+            if (timer < randomtime)
             {
                 enemy.Moving();
             }
@@ -38,13 +39,13 @@ public class PatrolState : IState
                 enemy.changeState(new IdleState());
             }
         }
-
         
         
     }
 
     public void OnExit(Enemy enemy)
     {
-        Debug.Log("Patrol Exit");
+        
     }
 }
+;
