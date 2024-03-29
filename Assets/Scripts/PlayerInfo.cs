@@ -8,6 +8,7 @@ public class PlayerInfo : MonoBehaviour
 {
     [SerializeField] public Animator anim;
     [SerializeField] protected HealthBar healthBar;
+    [SerializeField] private CombatText combatTextPrefab;
     public string currentAnimName;
     [SerializeField] public float hp = 100f;
     [SerializeField] public bool isDead2 => hp <= 0;
@@ -42,9 +43,10 @@ public class PlayerInfo : MonoBehaviour
             {
                 hp = 0;
                 
-                OnDeath();
+                OnDeath();  
             }
             healthBar.setNewHp(hp);
+            Instantiate(combatTextPrefab, transform.position + Vector3.up,Quaternion.identity).OnInit(damage);
         }
     }
     public virtual void OnDeath()

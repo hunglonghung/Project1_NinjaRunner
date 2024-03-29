@@ -15,13 +15,19 @@ public class Player : PlayerInfo
     [SerializeField] Kunai kunaiPrefab;
     [SerializeField] Transform throwPoint;
     [SerializeField] GameObject attackArea;
-    private bool isGrounded = false ;
+    
+    [SerializeField]private bool isGrounded = false ;
+    [SerializeField]private int coin = 0;
     private bool isJumping = false;
     private bool isAttack = false;
     private bool isDead = false;
     private int coinCount = 0;
     float horizontal;
     Vector3 savePoint;
+    private void Awake()
+    {
+        coin = PlayerPrefs.GetInt("Coin", 0);
+    }
     
     // Start is called before the first frame update
     void Start()
@@ -38,7 +44,7 @@ public class Player : PlayerInfo
             return;
         }
         isGrounded = checkGrounded();
-        horizontal = Input.GetAxisRaw("Horizontal");
+        // horizontal = Input.GetAxisRaw("Horizontal");
         Debug.Log(isAttack);
         if(isAttack)
         {
@@ -61,14 +67,12 @@ public class Player : PlayerInfo
             // jump
             if (Input.GetKeyDown(KeyCode.K) && isGrounded)
             {
-                isJumping = true;
-                changeAnim("Jump");
-                rb.AddForce(jumpForce * Vector2.up) ;
+                Jump();
             }
-                if (Mathf.Abs(horizontal) > 0.1f)
-                {
-                    changeAnim("Run");
-                }
+            if (Mathf.Abs(horizontal) > 0.1f)
+            {
+                changeAnim("Run");
+            }
             //attack
             if(Input.GetKeyDown(KeyCode.J) && isGrounded)
             {
@@ -117,23 +121,37 @@ public class Player : PlayerInfo
         return hit.collider != null;
 
     }
-    void Attack()
+    public void Attack()
     {
-        changeAnim("Attack");
-        isAttack = true;
-        Invoke("ResetAttack",0.5f);
-        attackArea.SetActive(true);
-        ActiveAttack();
-        Invoke(nameof(DeActiveAttack),0.5f);
-    }
-    void Throw()
-    {
-        changeAnim("Throw");
-        isAttack = true;
+        if(isGrounded && !isAttack)
+        {
+            changeAnim("Attack");
+            isAttack = true;
+            Invoke("ResetAttack",0.5f);
+            attackArea.SetActive(true);
+            ActiveAttack();
+            Invoke(nameof(DeActiveAttack),0.5f);
+        }
         
-        Instantiate(kunaiPrefab,throwPoint.position,throwPoint.rotation);
-        Debug.Log(Instantiate(kunaiPrefab,throwPoint.position,throwPoint.rotation));
-        Invoke("ResetAttack",0.5f);
+    }
+    public void Throw()
+    {
+        if(isGrounded && !isAttack)
+        {
+            changeAnim("Throw");
+            isAttack = true;
+            
+            Instantiate(kunaiPrefab,throwPoint.position,throwPoint.rotation);
+            
+            Invoke("ResetAttack",0.5f);
+        }
+        
+    }
+    public void Jump()
+    {
+        isJumping = true;
+        changeAnim("Jump");
+        rb.AddForce(jumpForce * Vector2.up) ;
     }
     void ResetAttack()
     {
@@ -154,7 +172,9 @@ public class Player : PlayerInfo
         if(other.tag == "Coin")
         {
             Destroy(other.gameObject);
-            coinCount ++;   
+            coin ++;   
+            PlayerPrefs.SetInt("coin",coin);
+            UiManager.Instance.SetCoin(coin);
         }
         if(other.tag == "DeathZone")
         {
@@ -178,6 +198,7 @@ public class Player : PlayerInfo
         changeAnim("Idle");
         SavePoint();
         DeActiveAttack();
+        UiManager.Instance.SetCoin(coin);
         
     }
     public override void OnDespawn()
@@ -196,5 +217,9 @@ public class Player : PlayerInfo
     private void DeActiveAttack()
     {
         attackArea.SetActive(false);
+    }
+    public void SetMove(float Horizontal)
+    {
+        this.horizontal = Horizontal;
     }
 }
